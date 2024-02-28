@@ -52,7 +52,7 @@
         @if (Auth::user()->hasRole('admin'))
             <div class="mt-8">
                 <h2 class="text-white text-2xl font-bold mb-4">Admin Dashboard</h2>
-                < class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                     {{-- Totaal aantal uren deze maand --}}
                     <div class="bg-blue-200 p-4 rounded-lg">
@@ -109,6 +109,7 @@
                         <h3 class="text-lg font-semibold mb-2">Gemiddelde aantal uren gewerkt:</h3>
                         <p class="text-gray-600">{{ number_format($adminDashboard['averageHoursWorked'], 2) }} uren</p>
                     </div>
+
                 </div>
             </div>
         @endif
