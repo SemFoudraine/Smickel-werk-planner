@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Console\Scheduling\Schedule;
 
 class Kernel extends HttpKernel
 {
@@ -40,7 +41,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -65,4 +66,19 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
+    protected $routeMiddleware = [
+        'admin' => \App\Http\Middleware\CheckAdminRole::class,
+        'werkgever' => \App\Http\Middleware\WerkgeverMiddleware::class,
+        'user.is.authorized' => \App\Http\Middleware\EnsureUserIsAuthorized::class,
+    ];
+
+    protected $commands = [
+        \App\Console\Commands\DeleteExpiredVerlofaanvragen::class,
+    ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('verlofaanvragen:delete-expired')->daily();
+    }
 }
