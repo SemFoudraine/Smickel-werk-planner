@@ -72,7 +72,7 @@
                                 <span>{{ \Carbon\Carbon::parse($rooster->start_tijd)->format('H:i') }} -
                                     {{ \Carbon\Carbon::parse($rooster->eind_tijd)->format('H:i') }}</span>
                                 @if ($rooster->taak)
-                                    <br><strong>{{ $rooster->taak->naam }}</strong>
+                                    <br><strong>{{ $rooster->taak->naam }}</strong><br>
                                 @endif
 
                                 <!-- Conditioneel renderen van de link voor admins met behulp van een inline if-statement -->

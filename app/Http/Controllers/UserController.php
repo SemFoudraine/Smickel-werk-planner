@@ -181,6 +181,33 @@ class UserController extends Controller
         return back()->with('success', 'Taak succesvol toegevoegd.');
     }
 
+    public function create()
+    {
+        return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        // Valideer de invoer van de gebruiker
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Maak de gebruiker aan in de database
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']), // Wachtwoord hashen
+        ]);
+
+        // Optioneel: de gebruiker direct inloggen of een andere actie uitvoeren
+
+        // Redirect naar een pagina (bijv. gebruikerslijst) met een succesmelding
+        return redirect()->route('admin.index')->with('success', 'Gebruiker succesvol toegevoegd.');
+    }
+
     public function editTask($taskId)
     {
         $task = Task::findOrFail($taskId);

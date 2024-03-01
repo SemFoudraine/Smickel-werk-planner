@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <h1 class="text-white mb-4">Werknemers</h1>
+        <h1 class="text-white mb-4">Werknemers <a href="/users/create" class="btn btn-primary">+</a></h1>
 
         @if (session('error'))
             <div class="alert alert-danger">

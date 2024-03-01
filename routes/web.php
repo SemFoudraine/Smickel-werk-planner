@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Routes alleen toegankelijk voor admins
 Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::delete('/remove-from-rooster/{roosterId}', [UserController::class, 'removeFromRooster'])->name('removeFromRooster');
     Route::get('/editTimes/{userId}', [UserController::class, 'editTimes'])->name('editTimes');
     Route::get('/beheer', [UserController::class, 'index'])->name('admin.index');
