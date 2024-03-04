@@ -104,6 +104,12 @@
             <x-responsive-nav-link :href="route('verlofaanvragen.index')" :active="request()->routeIs('verlofaanvragen')" class="text-gray-300">
                 {{ __('Verlof Aanvragen') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications')" class="text-gray-300">
+                {{ __('Meldingen') }}
+                @if ($unreadNotificationsCount > 0)
+                    <span class="unread-indicator">{{ $unreadNotificationsCount }}</span>
+                @endif
+            </x-responsive-nav-link>
             @if (Auth::user()->hasRole('admin'))
                 <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('beheer')" class="text-gray-300">
                     {{ __('Beheer') }}

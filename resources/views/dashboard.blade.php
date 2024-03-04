@@ -96,7 +96,7 @@
 
                     {{-- Meest actieve gebruikers op basis van het aantal uren deze maand --}}
                     <div class="bg-pink-200 p-4 rounded-lg">
-                        <h3 class="text-lg font-semibold mb-2">Meest actieve gebruikers deze maand (uren):</h3>
+                        <h3 class="text-lg font-semibold mb-2">Meest gewerkte uren deze maand:</h3>
                         <ul>
                             @foreach ($adminDashboard['mostActiveUsers'] as $user)
                                 <li>{{ $user->user->name }} - {{ $user->total_hours }} uren</li>

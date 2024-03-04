@@ -23,7 +23,7 @@
             </div>
         @endif
 
-        @if ($user->hasRole('admin'))
+        @if ($user->hasRole('admin') && auth()->user()->id !== $user->id)
             <div class="mt-2">
                 <form action="{{ route('users.removeRole', $user->id) }}" method="POST">
                     @csrf
