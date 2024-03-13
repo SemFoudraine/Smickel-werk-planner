@@ -77,7 +77,6 @@
 
                                 <!-- Conditioneel renderen van de link voor admins met behulp van een inline if-statement -->
                                 @if (Auth::user()->hasRole('admin'))
-
                                     <div class="btn-group flex-column flex-md-row" role="group"
                                         aria-label="Rooster Actions" data-admin-action>
                                         <form method="POST"
@@ -143,26 +142,41 @@
         document.addEventListener('DOMContentLoaded', function() {
             var showOnlyMyRoosters = localStorage.getItem('showOnlyMyRoosters') === 'true';
             toggleRoosters(showOnlyMyRoosters);
+
+            // Controleer of 'isAdminView' in local storage is opgeslagen
+            var isAdminViewStored = localStorage.getItem('isAdminView');
+            var isAdminView = isAdminViewStored ? JSON.parse(isAdminViewStored) : true; // Standaardwaarde is true
+
+            // Update de admin-acties en de knoptekst op basis van 'isAdminView'
+            updateAdminView(isAdminView);
         });
 
-        // Event listener voor de knop
+        // Functie om de adminweergave te updaten
+        function updateAdminView(isAdminView) {
+            var adminActions = document.querySelectorAll('[data-admin-action]');
+            adminActions.forEach(function(element) {
+                element.style.display = isAdminView ? '' : 'none';
+            });
+
+            document.getElementById('toggleAdminView').textContent = isAdminView ? 'Stop Bewerken' : 'Bewerk Rooster';
+        }
+
+        // Event listener voor de rooster toggle knop
         document.getElementById('toggleMyRoosters').addEventListener('click', function() {
             var showOnlyMyRoosters = localStorage.getItem('showOnlyMyRoosters') !== 'true';
             toggleRoosters(showOnlyMyRoosters);
         });
 
+        // Event listener voor de adminweergave toggle knop
         document.getElementById('toggleAdminView').addEventListener('click', function() {
             var isAdminView = this.textContent.includes('Stop Bewerken');
-
-            // Toggle de tekst op de knop
-            this.textContent = isAdminView ? 'Bewerk Rooster' : 'Stop Bewerken';
-
-            // Toggle de zichtbaarheid van admin-acties
-            document.querySelectorAll('[data-admin-action]').forEach(function(element) {
-                element.style.display = isAdminView ? 'none' : '';
-            });
+            isAdminView = !isAdminView; // Toggle de status
+            localStorage.setItem('isAdminView', JSON.stringify(
+            isAdminView)); // Sla de nieuwe status op in local storage
+            updateAdminView(isAdminView); // Update de weergave
         });
     </script>
+
 @endsection
 
 <style>
