@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container">
-        <h1 class="text-white">Rollen beheren voor gebruiker: {{ $user->name }}</h1>
+        <h1 class="text-black dark:text-white">Rollen beheren voor {{ $user->name }}</h1>
 
         <div class="mt-4">
-            <h2 class="text-white">Huidige rollen:</h2>
+            <h2 class="text-black dark:text-white">Huidige rollen:</h2>
             <ul class="list-group">
                 @foreach ($roles as $role)
                     <li class="list-group-item bg-dark text-white">{{ $role->name }}</li>

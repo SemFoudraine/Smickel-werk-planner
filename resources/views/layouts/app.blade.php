@@ -17,7 +17,7 @@
 
 </head>
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-slate-100 dark:bg-gray-900">
         <!-- Navigation -->
         @include('layouts.navigation') <!-- Assuming you have a navigation blade file -->
 

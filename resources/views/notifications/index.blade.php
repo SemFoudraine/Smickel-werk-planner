@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container bg-gray-800 p-4 rounded-lg">
-        <h2 class="text-white text-2xl font-bold mb-4">Meldingen</h2>
+    <div class="container dark:bg-gray-800 p-4 rounded-lg">
+        <h2 class="text-black dark:text-white text-2xl font-bold mb-4">Meldingen</h2>
         <ul class="bg-white rounded-lg shadow-md p-4">
             @forelse ($notifications as $notification)
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4">
