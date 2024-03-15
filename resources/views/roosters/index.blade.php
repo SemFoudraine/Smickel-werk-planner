@@ -23,7 +23,7 @@
     @endif
 
     <div class="container mt-4">
-        <h1 class="text-center mb-4 text-white">Roosters | Week {{ $currentWeek }} | <button id="toggleMyRoosters"
+        <h1 class="text-center mb-4 text-black dark:text-white">Roosters | Week {{ $currentWeek }} | <button id="toggleMyRoosters"
                 class="btn btn-secondary btn-sm">Persoonlijk Rooster</button></h1>
         <div class="text-center mb-4">
             <!-- Week Navigation -->

@@ -9,7 +9,7 @@
         @endif
     @endif
     <div class="container mx-auto">
-        <h1 class="text-white text-3xl font-bold mb-4">Dashboard</h1>
+        <h1 class="text-black text-3xl font-bold mb-4 dark:text-white">Dashboard</h1>
 
         <div class="bg-gray-200 p-4 rounded-lg mb-4">
             @if (isset($roostersThisWeek) && !$roostersThisWeek->isEmpty())
@@ -51,7 +51,7 @@
 
         @if (Auth::user()->hasRole('admin'))
             <div class="mt-8">
-                <h2 class="text-white text-2xl font-bold mb-4">Admin Dashboard</h2>
+                <h2 class="text-black text-2xl font-bold mb-4 dark:text-white">Admin Dashboard</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                     {{-- Totaal aantal uren deze maand --}}

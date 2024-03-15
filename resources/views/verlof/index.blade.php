@@ -12,7 +12,7 @@
         }
     </style>
 
-    <div class="container" style="color: white;">
+    <div class="container text-black dark:text-white mx-auto p-4">
         @if (Auth::user()->hasRole('admin'))
             @if (\App\Models\Verlofaanvraag::where('status', 'In Afwachting')->exists())
                 <div class="alert alert-warning">
@@ -22,55 +22,56 @@
         @endif
         <h1>Verlofaanvragen</h1>
 
-        <div class="verlof-form" style="color: white;">
-            <form action="{{ route('verlofaanvragen.store') }}" method="POST">
+        <div class="verlof-form text-black dark:text-white">
+            <form action="{{ route('verlofaanvragen.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="form-group">
-                    <label for="datum" style="color: white;">Begin Datum:</label>
-                    <input type="date" id="datum" name="datum" class="form-control" required>
+                    <label for="datum" class="text-black dark:text-white block">Begin Datum:</label>
+                    <input type="date" id="datum" name="datum" class="form-control text-black dark:text-white"
+                        required>
                 </div>
                 <div class="form-group">
-                    <label for="eind_datum" style="color: white;">Eind Datum:</label>
-                    <input type="date" id="eind_datum" name="eind_datum" class="form-control">
-                    <small style="color: white;">Laat leeg als het om één dag gaat.</small>
+                    <label for="eind_datum" class="text-black dark:text-white block">Eind Datum:</label>
+                    <input type="date" id="eind_datum" name="eind_datum" class="form-control text-black dark:text-white">
+                    <small class="text-black dark:text-white">Laat leeg als het om één dag gaat.</small>
                 </div>
                 <div class="form-group">
-                    <label for="reden" style="color: white;">Reden:</label>
-                    <textarea id="reden" name="reden" rows="4" class="form-control" required style="color: black;"></textarea>
+                    <label for="reden" class="text-black dark:text-white block">Reden:</label>
+                    <textarea id="reden" name="reden" rows="4" class="form-control text-black dark:text-white" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Verlof aanvragen</button>
             </form>
         </div>
 
-        <div class="verlofaanvragen mt-5">
-            <h2>Overzicht verlofaanvragen</h2>
-            <table class="table table-bordered">
-                <thead class="thead-dark">
+        <div class="overflow-x-auto mt-6">
+            <table class="table-auto w-full">
+                <thead class="bg-gray-800 text-white">
                     <tr>
-                        <th>Gebruiker</th>
-                        <th>Datum</th>
-                        <th>Eind Datum</th>
-                        <th>Reden</th>
-                        <th>Status</th>
+                        <th class="px-4 py-2">Gebruiker</th>
+                        <th class="px-4 py-2">Datum</th>
+                        <th class="px-4 py-2">Eind Datum</th>
+                        <th class="px-4 py-2">Reden</th>
+                        <th class="px-4 py-2">Status</th>
                         @if (auth()->user()->isAdmin())
-                            <th>Actie</th>
+                            <th class="px-4 py-2">Actie</th>
                         @endif
                     </tr>
                 </thead>
-                <tbody style="color: white;">
+                <tbody class="text-black dark:text-white">
                     @foreach ($verlofaanvragen as $verlofaanvraag)
-                        <tr>
-                            <td>{{ $verlofaanvraag->user->name ?? 'Gebruiker niet gevonden' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($verlofaanvraag->datum)->format('d-m-Y') }}</td>
-                            <td>{{ $verlofaanvraag->eind_datum ? \Carbon\Carbon::parse($verlofaanvraag->eind_datum)->format('d-m-Y') : 'N.V.T' }}
+                        <tr class="border-b">
+                            <td class="px-4 py-2">{{ $verlofaanvraag->user->name ?? 'Gebruiker niet gevonden' }}</td>
+                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($verlofaanvraag->datum)->format('d-m-Y') }}</td>
+                            <td class="px-4 py-2">
+                                {{ $verlofaanvraag->eind_datum ? \Carbon\Carbon::parse($verlofaanvraag->eind_datum)->format('d-m-Y') : 'N.V.T' }}
                             </td>
-                            <td>{{ $verlofaanvraag->reden }}</td>
-                            <td
+                            <td class="px-4 py-2">{{ $verlofaanvraag->reden }}</td>
+                            <td class="px-4 py-2"
                                 style="color: {{ $verlofaanvraag->status === 'In Afwachting' ? 'yellow' : ($verlofaanvraag->status === 'Afgekeurd' ? 'red' : 'green') }}">
                                 {{ $verlofaanvraag->status }}
                             </td>
                             @if (auth()->user()->isAdmin())
-                                <td class="text-center">
+                                <td class="px-4 py-2 text-center">
                                     @if ($verlofaanvraag->status === 'In Afwachting')
                                         <form action="{{ route('verlofaanvragen.approve', $verlofaanvraag->id) }}"
                                             method="POST" style="display: inline;">
