@@ -45,7 +45,7 @@
 
         <div class="overflow-x-auto mt-6">
             <table class="table-auto w-full">
-                <thead class="bg-gray-800 text-white">
+                <thead class="bg-blue-900 text-white">
                     <tr>
                         <th class="px-4 py-2">Gebruiker</th>
                         <th class="px-4 py-2">Datum</th>
@@ -57,7 +57,7 @@
                         @endif
                     </tr>
                 </thead>
-                <tbody class="text-black dark:text-white">
+                <tbody class="text-white bg-blue-700 dark:text-white dark:bg-gray-900">
                     @foreach ($verlofaanvragen as $verlofaanvraag)
                         <tr class="border-b">
                             <td class="px-4 py-2">{{ $verlofaanvraag->user->name ?? 'Gebruiker niet gevonden' }}</td>

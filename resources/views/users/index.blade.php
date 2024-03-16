@@ -25,7 +25,7 @@
         <ul class="list-group">
             @foreach ($users as $user)
                 <li class="list-group-item bg-transparent border-0 mb-2">
-                    <div class="p-3 rounded bg-dark text-white">
+                    <div class="p-3 rounded bg-blue-900 text-white dark:text-white dark:bg-dark">
                         <div class="d-flex justify-content-between align-items-center">
                             <span>{{ $user->name }}</span>
                             <div class="btn-group" role="group" aria-label="Gebruikersacties">
