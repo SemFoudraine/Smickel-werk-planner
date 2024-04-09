@@ -34,8 +34,12 @@
                                         @php
                                             // $date is a Y-m-d formatted string, so let's find the corresponding roster entry
 $rosterEntry = $roosters->where('datum', $date)->first();
-$startTime = optional($rosterEntry)->start_tijd ? optional($rosterEntry)->start_tijd->format('H:i') : 'Geen starttijd';
-$endTime = optional($rosterEntry)->eind_tijd ? optional($rosterEntry)->eind_tijd->format('H:i') : 'Geen eindtijd';
+$startTime = optional($rosterEntry)->start_tijd
+    ? optional($rosterEntry)->start_tijd->format('H:i')
+    : 'Geen starttijd';
+$endTime = optional($rosterEntry)->eind_tijd
+    ? optional($rosterEntry)->eind_tijd->format('H:i')
+    : 'Geen eindtijd';
                                         @endphp
                                         <option value="{{ $date }}">
                                             {{ \Carbon\Carbon::parse($date)->format('d-m-Y') }} | {{ $startTime }} -
