@@ -33,7 +33,7 @@ class VerlofaanvraagController extends Controller
         $request->validate([
             'datum' => 'required|date',
             'eind_datum' => 'nullable|date|after_or_equal:datum', // Zorg ervoor dat eind_datum na datum is
-            'reden' => 'required',
+            'reden' => 'nullable',
         ]);
 
         Verlofaanvraag::create([

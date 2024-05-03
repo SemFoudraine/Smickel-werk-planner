@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group">
                     <label for="reden" class="text-black dark:text-white block">Reden:</label>
-                    <textarea id="reden" name="reden" rows="4" class="form-control text-black dark:text-white" required></textarea>
+                    <textarea id="reden" name="reden" rows="4" class="form-control text-black dark:text-white" placeholder="Niet verplicht"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Verlof aanvragen</button>
             </form>
@@ -65,7 +65,7 @@
                             <td class="px-4 py-2">
                                 {{ $verlofaanvraag->eind_datum ? \Carbon\Carbon::parse($verlofaanvraag->eind_datum)->format('d-m-Y') : 'N.V.T' }}
                             </td>
-                            <td class="px-4 py-2">{{ $verlofaanvraag->reden }}</td>
+                            <td class="px-4 py-2">{{ $verlofaanvraag->reden ? : 'Geen reden opgegeven' }}</td>
                             <td class="px-4 py-2"
                                 style="color: {{ $verlofaanvraag->status === 'In Afwachting' ? 'yellow' : ($verlofaanvraag->status === 'Afgekeurd' ? 'red' : 'green') }}">
                                 {{ $verlofaanvraag->status }}
