@@ -23,8 +23,8 @@
     @endif
 
     <div class="container mt-4">
-        <h1 class="text-center mb-4 text-black dark:text-white">Roosters | Week {{ $currentWeek }} | <button id="toggleMyRoosters"
-                class="btn btn-secondary btn-sm">Persoonlijk Rooster</button></h1>
+        <h1 class="text-center mb-4 text-black dark:text-white">Roosters | Week {{ $currentWeek }} | <button
+                id="toggleMyRoosters" class="btn btn-secondary btn-sm">Persoonlijk Rooster</button></h1>
         <div class="text-center mb-4">
             <!-- Week Navigation -->
             <a href="{{ route('roosters.index', ['week' => $previousWeek]) }}" class="btn btn-primary btn-sm mr-2">
@@ -84,7 +84,8 @@
                                             data-admin-action>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete();">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirmDelete();">
                                                 <i class='bx bxs-trash'></i>
                                             </button>
                                         </form>
@@ -151,14 +152,25 @@
             updateAdminView(isAdminView);
         });
 
-        document.addEventListener('DOMcontentLoaded', function() {
-            var today = new Date().toISOString().slice(0, 10);
+        document.addEventListener('DOMContentLoaded', function() {
+            var today = new Date().toISOString().slice(0, 10); // Formatteert de huidige datum als "YYYY-MM-DD"
             var todayElement = document.getElementById('day-' + today);
 
             if (todayElement) {
-                todayElement.scrollIntoView({behavior: 'smooth', block: 'start'})
+                todayElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
+
+            var showOnlyMyRoosters = localStorage.getItem('showOnlyMyRoosters') === 'true';
+            toggleRoosters(showOnlyMyRoosters);
+
+            var isAdminViewStored = localStorage.getItem('isAdminView');
+            var isAdminView = isAdminViewStored ? JSON.parse(isAdminViewStored) : true; // Standaardwaarde is true
+            updateAdminView(isAdminView);
         });
+
 
         // Functie om de adminweergave te updaten
         function updateAdminView(isAdminView) {
@@ -181,7 +193,7 @@
             var isAdminView = this.textContent.includes('Stop Bewerken');
             isAdminView = !isAdminView; // Toggle de status
             localStorage.setItem('isAdminView', JSON.stringify(
-            isAdminView)); // Sla de nieuwe status op in local storage
+                isAdminView)); // Sla de nieuwe status op in local storage
             updateAdminView(isAdminView); // Update de weergave
         });
 
