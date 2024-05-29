@@ -43,8 +43,8 @@
         <div class="rooster-container">
             @foreach ($days as $day)
                 <div class="day-container" id="day-{{ $day->format('Y-m-d') }}">
-                    <div class="day-header">
-                        {{ ucfirst($day->locale('nl')->isoFormat('dddd')) }}<br>{{ $day->format('d M Y') }}
+                    <div class="day-header {{ $day->format('Y-m-d') === now()->format('Y-m-d') ? 'current-day' : '' }}">
+                        {{ ucfirst($day->locale('nl')->isoFormat('dddd D MMMM Y')) }}
                         @if (Auth::user()->hasRole('admin'))
                             <a href="{{ route('addRooster', ['date' => $day->toDateString()]) }}" data-admin-action>
                                 <button class="btn btn-add mt-2">Toevoegen</button>
@@ -107,6 +107,14 @@
         </div>
     </div>
 
+    <style>
+        .day-header.current-day {
+            border: 2px solid rgb(0, 219, 0);
+            /* Groene rand toevoegen */
+            /* Verwijder alle overbodige styling die impact kan hebben buiten de header */
+        }
+    </style>
+
     <script>
         // Functie om de weergave van roosters te toggelen
         function toggleRoosters(showOnlyMyRoosters) {
@@ -153,7 +161,8 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            var today = new Date().toISOString().slice(0, 10); // Formatteert de huidige datum als "YYYY-MM-DD"
+            // Instellen van de huidige dag
+            var today = new Date().toISOString().slice(0, 10);
             var todayElement = document.getElementById('day-' + today);
 
             if (todayElement) {
@@ -161,8 +170,10 @@
                     behavior: 'smooth',
                     block: 'start'
                 });
+                todayElement.classList.add('current-day'); // Voeg de current-day class toe
             }
 
+            // Andere initialisaties
             var showOnlyMyRoosters = localStorage.getItem('showOnlyMyRoosters') === 'true';
             toggleRoosters(showOnlyMyRoosters);
 
@@ -170,6 +181,8 @@
             var isAdminView = isAdminViewStored ? JSON.parse(isAdminViewStored) : true; // Standaardwaarde is true
             updateAdminView(isAdminView);
         });
+
+
 
 
         // Functie om de adminweergave te updaten
