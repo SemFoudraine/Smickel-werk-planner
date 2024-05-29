@@ -42,7 +42,7 @@
         <!-- Rooster Container -->
         <div class="rooster-container">
             @foreach ($days as $day)
-                <div class="day-container">
+                <div class="day-container" id="day-{{ $day->format('Y-m-d') }}">
                     <div class="day-header">
                         {{ ucfirst($day->locale('nl')->isoFormat('dddd')) }}<br>{{ $day->format('d M Y') }}
                         @if (Auth::user()->hasRole('admin'))
@@ -84,7 +84,7 @@
                                             data-admin-action>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete();">
                                                 <i class='bx bxs-trash'></i>
                                             </button>
                                         </form>
@@ -151,6 +151,15 @@
             updateAdminView(isAdminView);
         });
 
+        document.addEventListener('DOMcontentLoaded', function() {
+            var today = new Date().toISOString().slice(0, 10);
+            var todayElement = document.getElementById('day-' + today);
+
+            if (todayElement) {
+                todayElement.scrollIntoView({behavior: 'smooth', block: 'start'})
+            }
+        });
+
         // Functie om de adminweergave te updaten
         function updateAdminView(isAdminView) {
             var adminActions = document.querySelectorAll('[data-admin-action]');
@@ -175,6 +184,10 @@
             isAdminView)); // Sla de nieuwe status op in local storage
             updateAdminView(isAdminView); // Update de weergave
         });
+
+        function confirmDelete() {
+            return confirm('Weet je zeker dat je deze wilt verwijderen?');
+        }
     </script>
 
 @endsection
