@@ -161,19 +161,19 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Instellen van de huidige dag
-            var today = new Date().toISOString().slice(0, 10);
-            var todayElement = document.getElementById('day-' + today);
-
-            if (todayElement) {
-                todayElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                todayElement.classList.add('current-day'); // Voeg de current-day class toe
+            // Alleen scrollen op kleine schermen
+            if (window.innerWidth < 768) {
+                var today = new Date().toISOString().slice(0, 10);
+                var todayElement = document.getElementById('day-' + today);
+                if (todayElement) {
+                    todayElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    todayElement.classList.add('current-day');
+                }
             }
 
-            // Andere initialisaties
             var showOnlyMyRoosters = localStorage.getItem('showOnlyMyRoosters') === 'true';
             toggleRoosters(showOnlyMyRoosters);
 
@@ -181,9 +181,6 @@
             var isAdminView = isAdminViewStored ? JSON.parse(isAdminViewStored) : true; // Standaardwaarde is true
             updateAdminView(isAdminView);
         });
-
-
-
 
         // Functie om de adminweergave te updaten
         function updateAdminView(isAdminView) {
