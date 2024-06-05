@@ -20,7 +20,6 @@ class Rooster extends Model
     // Velden die als datum moeten worden behandeld
     protected $dates = ['datum', 'starttijd', 'eindtijd'];
 
-    // Definieer een relatie met de User model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

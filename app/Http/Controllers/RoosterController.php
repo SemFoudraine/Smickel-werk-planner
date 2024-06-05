@@ -575,4 +575,16 @@ class RoosterController extends Controller
             return response()->json(['error' => 'Failed to update approval status.']);
         }
     }
+
+    public function getRoosterData(Request $request)
+    {
+        $data = Rooster::with('user')->get();
+
+        $data->transform(function ($item) {
+            $item->user_name = $item->user->name;
+            return $item;
+        });
+
+        return response()->json($data);
+    }
 }

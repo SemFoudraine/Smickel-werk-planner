@@ -11,6 +11,7 @@ use App\Models\Role;
 use App\Models\Task;
 use App\Models\Notification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -253,5 +254,10 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('users.index')->with('success', 'Gebruiker succesvol bijgewerkt.');
+    }
+
+    public function getUser(Request $request)
+    {
+        return response()->json(Auth::user());
     }
 }
