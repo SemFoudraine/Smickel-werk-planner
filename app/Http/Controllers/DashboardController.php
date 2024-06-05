@@ -71,40 +71,47 @@ class DashboardController extends Controller
 
     public function getUserHours()
     {
-        $userId = Auth::id();
-        $currentWeekStart = Carbon::now()->startOfWeek();
-        $currentWeekEnd = Carbon::now()->endOfWeek();
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
+        try {
+            $userId = Auth::id();
+            $currentWeekStart = Carbon::now()->startOfWeek();
+            $currentWeekEnd = Carbon::now()->endOfWeek();
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
 
-        $totalHoursThisWeek = Rooster::where('user_id', $userId)
-            ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
-            ->get()
-            ->reduce(function ($carry, $rooster) {
-                $startTijd = Carbon::parse($rooster->start_tijd);
-                $eindTijd = Carbon::parse($rooster->eind_tijd);
-                return $carry + $eindTijd->diffInHours($startTijd);
-            }, 0);
+            $totalHoursThisWeek = Rooster::where('user_id', $userId)
+                ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
+                ->get()
+                ->reduce(function ($carry, $rooster) {
+                    $startTijd = Carbon::parse($rooster->start_tijd);
+                    $eindTijd = Carbon::parse($rooster->eind_tijd);
+                    return $carry + $eindTijd->diffInHours($startTijd);
+                }, 0);
 
-        $totalHoursThisMonth = Rooster::where('user_id', $userId)
-            ->whereBetween('datum', [$startOfMonth, $endOfMonth])
-            ->sum('duur_in_uren');
+            $totalHoursThisMonth = Rooster::where('user_id', $userId)
+                ->whereBetween('datum', [$startOfMonth, $endOfMonth])
+                ->sum('duur_in_uren');
 
-        $roosterDaysThisWeek = Rooster::where('user_id', $userId)
-            ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
-            ->get(['datum', 'start_tijd', 'eind_tijd'])
-            ->map(function ($rooster) {
-                return [
-                    'datum' => $rooster->datum->format('Y-m-d'),
-                    'start_tijd' => $rooster->start_tijd->format('H:i:s'),
-                    'eind_tijd' => $rooster->eind_tijd->format('H:i:s'),
-                ];
-            });
+            $roosterDaysThisWeek = Rooster::where('user_id', $userId)
+                ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
+                ->get(['datum', 'start_tijd', 'eind_tijd'])
+                ->map(function ($rooster) {
+                    return [
+                        'datum' => Carbon::parse($rooster->datum)->format('Y-m-d'),
+                        'start_tijd' => Carbon::parse($rooster->start_tijd)->format('H:i:s'),
+                        'eind_tijd' => Carbon::parse($rooster->eind_tijd)->format('H:i:s'),
+                    ];
+                });
 
-        return response()->json([
-            'totalHoursThisWeek' => $totalHoursThisWeek,
-            'totalHoursThisMonth' => $totalHoursThisMonth,
-            'roosterDaysThisWeek' => $roosterDaysThisWeek,
-        ]);
+            return response()->json([
+                'totalHoursThisWeek' => $totalHoursThisWeek,
+                'totalHoursThisMonth' => $totalHoursThisMonth,
+                'roosterDaysThisWeek' => $roosterDaysThisWeek,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
     }
 }
