@@ -68,4 +68,31 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('roostersThisWeek', 'totalHoursThisMonth', 'totalHoursThisWeek', 'adminDashboard'));
     }
+
+    public function getUserHours()
+    {
+        $userId = Auth::id();
+        $currentWeekStart = Carbon::now()->startOfWeek();
+        $currentWeekEnd = Carbon::now()->endOfWeek();
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $totalHoursThisWeek = Rooster::where('user_id', $userId)
+            ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
+            ->get()
+            ->reduce(function ($carry, $rooster) {
+                $startTijd = Carbon::parse($rooster->start_tijd);
+                $eindTijd = Carbon::parse($rooster->eind_tijd);
+                return $carry + $eindTijd->diffInHours($startTijd);
+            }, 0);
+
+        $totalHoursThisMonth = Rooster::where('user_id', $userId)
+            ->whereBetween('datum', [$startOfMonth, $endOfMonth])
+            ->sum('duur_in_uren');
+
+        return response()->json([
+            'totalHoursThisWeek' => $totalHoursThisWeek,
+            'totalHoursThisMonth' => $totalHoursThisMonth,
+        ]);
+    }
 }
