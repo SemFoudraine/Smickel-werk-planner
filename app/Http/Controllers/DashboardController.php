@@ -90,9 +90,14 @@ class DashboardController extends Controller
             ->whereBetween('datum', [$startOfMonth, $endOfMonth])
             ->sum('duur_in_uren');
 
+        $roosterDaysThisWeek = Rooster::where('user_id', $userId)
+            ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
+            ->get(['datum']);
+
         return response()->json([
             'totalHoursThisWeek' => $totalHoursThisWeek,
             'totalHoursThisMonth' => $totalHoursThisMonth,
+            'roosterDaysThisWeek' => $roosterDaysThisWeek,
         ]);
     }
 }
