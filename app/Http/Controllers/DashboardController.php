@@ -92,7 +92,14 @@ class DashboardController extends Controller
 
         $roosterDaysThisWeek = Rooster::where('user_id', $userId)
             ->whereBetween('datum', [$currentWeekStart, $currentWeekEnd])
-            ->get(['datum']);
+            ->get(['datum', 'start_tijd', 'eind_tijd'])
+            ->map(function ($rooster) {
+                return [
+                    'datum' => $rooster->datum->format('Y-m-d'),
+                    'start_tijd' => $rooster->start_tijd->format('H:i:s'),
+                    'eind_tijd' => $rooster->eind_tijd->format('H:i:s'),
+                ];
+            });
 
         return response()->json([
             'totalHoursThisWeek' => $totalHoursThisWeek,
