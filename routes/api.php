@@ -18,12 +18,15 @@ use App\Http\Controllers\TaskController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
 Route::post('login', [AuthController::class, 'login']);
-Route::middleware('auth:api')->get('/userdata', [UserController::class, 'getUser']);
-Route::middleware('auth:api')->get('/user/hours', [DashboardController::class, 'getUserHours']);
-Route::middleware('auth:api')->get('/tasks', [TaskController::class, 'getTasks']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
+    Route::get('/userdata', [UserController::class, 'getUser']);
+    Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
+    Route::get('/tasks', [TaskController::class, 'getTasks']);
+});
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
