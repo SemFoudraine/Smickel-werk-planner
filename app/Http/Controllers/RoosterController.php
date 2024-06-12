@@ -288,9 +288,6 @@ class RoosterController extends Controller
             $userId = $rooster->user_id;
             $roosterDatum = $rooster->datum->format('d-m-Y');
 
-            // Debug informatie toevoegen om te controleren of de juiste user_id wordt opgehaald
-            dd($userId);
-
             // Verwijder het rooster
             $rooster->delete();
 
@@ -303,10 +300,10 @@ class RoosterController extends Controller
             ]);
             $notification->save();
 
-            return redirect()->route('roosters.index')->with('success', 'Rooster is succesvol verwijderd en een notificatie is aangemaakt.');
+            return response()->json(['success' => 'Rooster is succesvol verwijderd en een notificatie is aangemaakt.']);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Er is een fout opgetreden bij het verwijderen van het rooster.']);
+            return response()->json(['error' => 'Er is een fout opgetreden bij het verwijderen van het rooster.'], 500);
         }
     }
 
