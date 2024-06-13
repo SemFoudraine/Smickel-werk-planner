@@ -27,6 +27,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/userdata', [UserController::class, 'getUser']);
     Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
     Route::get('/tasks', [TaskController::class, 'getTasks']);
+    Route::put('/roosters/{id}', [RoosterController::class, 'updateRooster']);
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {

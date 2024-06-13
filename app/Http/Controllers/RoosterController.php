@@ -290,6 +290,57 @@ class RoosterController extends Controller
         }
     }
 
+    public function updateRooster(Request $request, $id)
+    {
+        try {
+            // Vind het rooster of geef een foutmelding als het niet gevonden wordt
+            $rooster = Rooster::findOrFail($id);
+
+            // Valideer de request data
+            $validatedData = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'datum' => 'required|date_format:Y-m-d',
+                'start_tijd' => 'required|date_format:H:i',
+                'eind_tijd' => 'required|date_format:H:i',
+                'taak_id' => 'nullable|exists:taken,id',
+            ]);
+
+            // Zet de start- en eindtijd om naar Carbon instanties
+            $startTijd = Carbon::createFromFormat('Y-m-d H:i', $validatedData['datum'] . ' ' . $validatedData['start_tijd']);
+            $eindTijd = Carbon::createFromFormat('Y-m-d H:i', $validatedData['datum'] . ' ' . $validatedData['eind_tijd']);
+
+            // Bereken de duur in uren
+            $duurInUren = $eindTijd->diffInHours($startTijd);
+
+            // Update het rooster inclusief de duur_in_uren
+            $rooster->user_id = $validatedData['user_id'];
+            $rooster->datum = $validatedData['datum'];
+            $rooster->start_tijd = $startTijd->toTimeString();
+            $rooster->eind_tijd = $eindTijd->toTimeString();
+            $rooster->taak_id = $validatedData['taak_id'];
+            $rooster->duur_in_uren = $duurInUren;
+
+            $rooster->save();
+
+            $userId = $rooster->user_id;
+            $roosterDatum = Carbon::createFromFormat('Y-m-d', $rooster->datum)->format('d-m-Y');
+
+            $notification = new Notification([
+                'user_id' => $userId,
+                'title' => 'Rooster Wijziging',
+                'message' => "Jouw rooster van <strong>{$roosterDatum}</strong> is aangepast.",
+                'is_read' => 0,
+            ]);
+            $notification->save();
+
+            return response()->json(['message' => 'Rooster succesvol bijgewerkt', 'rooster' => $rooster], 200);
+        } catch (\Exception $e) {
+            // Log de fout en retourneer een JSON-foutmelding
+            return response()->json(['error' => 'Er is een fout opgetreden bij het bijwerken van het rooster. Probeer het opnieuw.'], 500);
+        }
+    }
+
+
     public function destroy($id)
     {
         try {
