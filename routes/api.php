@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/tasks', [TaskController::class, 'getTasks']);
     Route::put('/roosters/{id}', [RoosterController::class, 'updateRooster']);
     Route::get('/users', [UserController::class, 'getUsers']);
+    Route::post('/roosters', [RoosterController::class, 'storeRooster']);
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
