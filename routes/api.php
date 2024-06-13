@@ -20,9 +20,9 @@ use App\Http\Controllers\TaskController;
 */
 
 Route::post('login', [AuthController::class, 'login']);
-Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
-Route::middleware('auth')->get('/userdata', [UserController::class, 'getUser']);
-Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
+Route::middleware('auth:api')->get('/userdata', [UserController::class, 'getUser']);
+Route::middleware('auth:api')->get('/user/hours', [DashboardController::class, 'getUserHours']);
+Route::middleware('auth:api')->get('/tasks', [TaskController::class, 'getTasks']);
 Route::get('/tasks', [TaskController::class, 'getTasks']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
