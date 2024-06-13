@@ -93,7 +93,7 @@ class UserController extends Controller
             ]);
             $notification->save();
 
-            return response()->json(['success' => 'Rooster is succesvol verwijderd en een notificatie is aangemaakt.']);
+            return redirect()->back()->with('success', 'Rooster entry succesvol verwijderd.');
         } catch (\Exception $e) {
             Log::error('Error deleting rooster: ' . $e->getMessage());
             Log::error('Trace: ' . $e->getTraceAsString());
