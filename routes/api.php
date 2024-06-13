@@ -23,7 +23,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->get('/userdata', [UserController::class, 'getUser']);
 Route::middleware('auth:api')->get('/user/hours', [DashboardController::class, 'getUserHours']);
 Route::middleware('auth:api')->get('/tasks', [TaskController::class, 'getTasks']);
-Route::get('/tasks', [TaskController::class, 'getTasks']);
+Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::delete('/roosters/{id}', [RoosterController::class, 'destroy']);
