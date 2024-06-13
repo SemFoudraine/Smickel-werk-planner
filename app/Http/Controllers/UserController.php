@@ -12,6 +12,7 @@ use App\Models\Task;
 use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -56,47 +57,48 @@ class UserController extends Controller
 
     public function removeFromRooster($roosterId)
     {
-        // Hier vinden we het rooster op basis van het rooster ID
-        $roosterEntry = Rooster::find($roosterId);
+        try {
+            // Hier vinden we het rooster op basis van het rooster ID
+            $roosterEntry = Rooster::findOrFail($roosterId);
 
-        // Controleren of het rooster bestaat
-        if (!$roosterEntry) {
-            return redirect()->back()->with('error', 'Rooster entry niet gevonden.');
+            // Aanvullende controle of de gebruiker admin-rechten heeft
+            $user = Auth::user();
+            if (!$this->hasRole($user, 'admin')) {
+                abort(403, 'Dit is niet toegestaan.');
+            }
+
+            // Gegevens voor de notificatie
+            $datum = Carbon::parse($roosterEntry->datum);
+            $starttijd = Carbon::parse($roosterEntry->start_tijd);
+            $eindtijd = Carbon::parse($roosterEntry->eind_tijd);
+
+            $geformatteerdeDatum = $datum->format('d-m-Y');
+            $geformatteerdeStartTijd = $starttijd->format('H:i');
+            $geformatteerdeEindTijd = $eindtijd->format('H:i');
+
+            // Gebruik de user_id van het rooster
+            $userId = $roosterEntry->user_id;
+
+            // Verwijder het rooster entry als alles in orde is
+            $roosterEntry->delete();
+
+            // Maak een nieuwe notificatie aan en stuur deze naar de gebruiker wiens rooster is verwijderd
+            $notification = new Notification([
+                'user_id' => $userId, // Gebruik de user_id van het rooster
+                'title' => 'Rooster wijziging',
+                'message' => 'Je rooster van <strong>' . $geformatteerdeDatum .
+                    '</strong> van <strong>' . $geformatteerdeStartTijd .
+                    '</strong> tot <strong>' . $geformatteerdeEindTijd . '</strong>' . ' is verwijderd.',
+                'is_read' => 0,
+            ]);
+            $notification->save();
+
+            return response()->json(['success' => 'Rooster is succesvol verwijderd en een notificatie is aangemaakt.']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting rooster: ' . $e->getMessage());
+            Log::error('Trace: ' . $e->getTraceAsString());
+            return response()->json(['error' => 'Er is een fout opgetreden bij het verwijderen van het rooster.'], 500);
         }
-
-        // Aanvullende controle of de gebruiker admin-rechten heeft
-        $user = auth()->user();
-        if (!$this->hasRole($user, 'admin')) {
-            abort(403, 'Dit is niet toegestaan.');
-        }
-
-        // Gegevens voor de notificatie
-        $datum = Carbon::parse($roosterEntry->datum);
-        $starttijd = Carbon::parse($roosterEntry->start_tijd);
-        $eindtijd = Carbon::parse($roosterEntry->eind_tijd);
-
-        $geformatteerdeDatum = $datum->format('d-m-Y');
-        $geformatteerdeStartTijd = $starttijd->format('H:i');
-        $geformatteerdeEindTijd = $eindtijd->format('H:i');
-
-        // Gebruik de user_id van het rooster
-        $userId = $roosterEntry->user_id;
-
-        // Verwijder het rooster entry als alles in orde is
-        $roosterEntry->delete();
-
-        // Maak een nieuwe notificatie aan en stuur deze naar de gebruiker wiens rooster is verwijderd
-        $notification = new Notification([
-            'user_id' => $userId, // Gebruik de user_id van het rooster
-            'title' => 'Rooster wijziging',
-            'message' => 'Je rooster van <strong>' . $geformatteerdeDatum .
-                '</strong> van <strong>' . $geformatteerdeStartTijd .
-                '</strong> tot <strong>' . $geformatteerdeEindTijd . '</strong>' . ' is verwijderd.',
-            'is_read' => 0,
-        ]);
-        $notification->save();
-
-        return redirect()->back()->with('success', 'Rooster entry succesvol verwijderd.');
     }
 
     public function editTimes($userId)
