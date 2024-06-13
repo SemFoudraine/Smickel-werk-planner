@@ -313,7 +313,8 @@ class RoosterController extends Controller
 
             return response()->json(['success' => 'Rooster is succesvol verwijderd en een notificatie is aangemaakt.']);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error('Error deleting rooster: ' . $e->getMessage());
+            Log::error('Trace: ' . $e->getTraceAsString());
             return response()->json(['error' => 'Er is een fout opgetreden bij het verwijderen van het rooster.'], 500);
         }
     }

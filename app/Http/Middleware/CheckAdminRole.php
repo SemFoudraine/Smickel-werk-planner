@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Http\Controllers\RoosterController;
 
 class CheckAdminRole
 {
@@ -14,6 +13,6 @@ class CheckAdminRole
             return $next($request);
         }
 
-        return redirect('/dashboard')->with('error', 'Unauthorized access');
+        return response()->json(['error' => 'Unauthorized access'], 403);
     }
 }
