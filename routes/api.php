@@ -25,9 +25,9 @@ Route::get('/userdata', [UserController::class, 'getUser']);
 Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
 Route::get('/tasks', [TaskController::class, 'getTasks']);
 
-Route::middleware(['auth:api', 'admin'])->group(function () {
-    Route::delete('/roosters/{id}', [RoosterController::class, 'destroy']);
-});
+// Route::middleware(['auth:api', 'admin'])->group(function () {
+//     Route::delete('/roosters/{id}', [RoosterController::class, 'destroy']);
+// });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
