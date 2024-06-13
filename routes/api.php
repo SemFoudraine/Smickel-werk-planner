@@ -30,7 +30,7 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
-    Route::delete('/roosters/{id}', [UserController::class, 'removeFromRooster']);
+    Route::delete('/remove-from-rooster/{roosterId}', [UserController::class, 'removeFromRooster'])->name('removeFromRooster');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
