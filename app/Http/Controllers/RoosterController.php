@@ -272,6 +272,17 @@ class RoosterController extends Controller
 
             $rooster->save();
 
+            $userId = $rooster->user_id;
+            $roosterDatum = Carbon::createFromFormat('Y-m-d', $rooster->datum)->format('d-m-Y');
+
+            $notification = new Notification([
+                'user_id' => $userId,
+                'title' => 'Rooster Wijziging',
+                'message' => "Jouw rooster van <strong>{$roosterDatum}</strong> is aangepast.",
+                'is_read' => 0,
+            ]);
+            $notification->save();
+
             return redirect()->route('roosters.index')->with('success', 'Rooster succesvol bijgewerkt.');
         } catch (\Exception $e) {
             // Log de fout en retourneer naar de vorige pagina met de foutmelding
@@ -295,7 +306,7 @@ class RoosterController extends Controller
             $notification = new Notification([
                 'user_id' => $userId,
                 'title' => 'Rooster Verwijderd',
-                'message' => "Je rooster voor datum {$roosterDatum} is verwijderd.",
+                'message' => "Je rooster voor datum <strong>{$roosterDatum}</strong> is verwijderd.",
                 'is_read' => 0,
             ]);
             $notification->save();
