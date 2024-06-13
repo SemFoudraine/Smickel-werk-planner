@@ -21,7 +21,7 @@ use App\Http\Controllers\TaskController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
-Route::get('/userdata', [UserController::class, 'getUser']);
+Route::middleware('auth')->get('/userdata', [UserController::class, 'getUser']);
 Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
 Route::get('/tasks', [TaskController::class, 'getTasks']);
 
