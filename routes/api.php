@@ -20,6 +20,7 @@ use App\Http\Controllers\TaskController;
 */
 
 Route::post('login', [AuthController::class, 'login']);
+Route::post('refresh', [AuthController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
