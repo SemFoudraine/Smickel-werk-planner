@@ -100,7 +100,6 @@ class UserController extends Controller
             return response()->json(['error' => 'Er is een fout opgetreden bij het verwijderen van het rooster.'], 500);
         }
     }
-
     public function editTimes($userId)
     {
         $user = User::findOrFail($userId);
