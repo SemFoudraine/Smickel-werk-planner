@@ -268,4 +268,11 @@ class UserController extends Controller
             'roles' => $user->roles->pluck('name'), // Voeg rollen toe aan de respons
         ]);
     }
+
+    public function getUsers()
+    {
+        $users = User::all();
+
+        return response()->json($users);
+    }
 }
