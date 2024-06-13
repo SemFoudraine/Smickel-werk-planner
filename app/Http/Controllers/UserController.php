@@ -264,7 +264,7 @@ class UserController extends Controller
             'email' => $user->email,
             'phone' => $user->phone,
             'birthdate' => $user->birthdate,
+            'roles' => $user->roles->pluck('name'), // Voeg rollen toe aan de respons
         ]);
     }
 }
-
