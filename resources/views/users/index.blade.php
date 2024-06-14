@@ -8,6 +8,8 @@
             </div>
         @endif
 
+        <a href="{{ url('werkplanner.apk') }}">Download de app</a>
+
         <h1 class="text-black dark:text-white mb-4">Werknemers <a href="/users/create" class="btn btn-primary">+</a></h1>
 
         @if (session('error'))
