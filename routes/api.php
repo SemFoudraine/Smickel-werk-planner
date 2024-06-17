@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\VerlofaanvraagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,13 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/roosters/{id}', [RoosterController::class, 'updateRooster']);
     Route::get('/users', [UserController::class, 'getUsers']);
     Route::post('/roosters', [RoosterController::class, 'storeRooster']);
+
+    Route::get('/verlofaanvragen', [VerlofaanvraagController::class, 'index']);
+    Route::post('/verlofaanvragen', [VerlofaanvraagController::class, 'store']);
+    Route::put('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'update']);
+    Route::delete('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'destroy']);
+    Route::post('/verlofaanvragen/{id}/approve', [VerlofaanvraagController::class, 'approve']);
+    Route::post('/verlofaanvragen/{id}/reject', [VerlofaanvraagController::class, 'reject']);
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
