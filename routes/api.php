@@ -33,7 +33,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users', [UserController::class, 'getUsers']);
     Route::post('/roosters', [RoosterController::class, 'storeRooster']);
 
-    Route::get('/verlofaanvragen', [VerlofaanvraagController::class, 'index']);
+    Route::get('/verlofaanvragen', [VerlofaanvraagController::class, 'indexApi']);
     Route::post('/verlofaanvragen', [VerlofaanvraagController::class, 'store']);
     Route::put('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'update']);
     Route::delete('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'destroy']);

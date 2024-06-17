@@ -28,6 +28,21 @@ class VerlofaanvraagController extends Controller
         return view('verlof.index', compact('verlofaanvragen'));
     }
 
+    public function indexApi()
+    {
+        if (auth()->User()->hasRole('admin')) {
+            // Haal alle verlofaanvragen op voor een admin
+            $verlofaanvragen = Verlofaanvraag::with('user')->get();
+        } else {
+            // Haal alleen verlofaanvragen op van de ingelogde gebruiker voor niet-admins
+            $verlofaanvragen = Verlofaanvraag::with('user')
+                ->where('user_id', auth()->id())
+                ->get();
+        }
+
+        return response()->json($verlofaanvragen);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
