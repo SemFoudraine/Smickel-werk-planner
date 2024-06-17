@@ -5,23 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Verlofaanvraag;
 use App\Models\User;
-use HasFactory, Notifiable;
-use App\Models\Notification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\Role;
+use App\Models\Notification;
 
 class VerlofaanvraagController extends Controller
 {
     public function index()
     {
         // Check of de ingelogde gebruiker een admin is
-        if (auth()->User()->hasRole('admin')) {
+        if (Auth::user()->hasRole('admin')) {
             // Haal alle verlofaanvragen op voor een admin
             $verlofaanvragen = Verlofaanvraag::with('user')->get();
         } else {
             // Haal alleen verlofaanvragen op van de ingelogde gebruiker voor niet-admins
             $verlofaanvragen = Verlofaanvraag::with('user')
-                ->where('user_id', auth()->id())
+                ->where('user_id', Auth::id())
                 ->get();
         }
 
@@ -30,13 +30,13 @@ class VerlofaanvraagController extends Controller
 
     public function indexApi()
     {
-        if (auth()->User()->hasRole('admin')) {
+        if (Auth::user()->hasRole('admin')) {
             // Haal alle verlofaanvragen op voor een admin
             $verlofaanvragen = Verlofaanvraag::with('user')->get();
         } else {
             // Haal alleen verlofaanvragen op van de ingelogde gebruiker voor niet-admins
             $verlofaanvragen = Verlofaanvraag::with('user')
-                ->where('user_id', auth()->id())
+                ->where('user_id', Auth::id())
                 ->get();
         }
 
@@ -45,62 +45,81 @@ class VerlofaanvraagController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'datum' => 'required|date',
-            'eind_datum' => 'nullable|date|after_or_equal:datum', // Zorg ervoor dat eind_datum na datum is
-            'reden' => 'nullable',
-        ]);
+        try {
+            $request->validate([
+                'datum' => 'required|date',
+                'eind_datum' => 'nullable|date|after_or_equal:datum', // Zorg ervoor dat eind_datum na datum is
+                'reden' => 'nullable',
+            ]);
 
-        Verlofaanvraag::create([
-            'user_id' => auth()->user()->id,
-            'datum' => $request->input('datum'),
-            'eind_datum' => $request->input('eind_datum'), // Sla de eind_datum op
-            'reden' => $request->input('reden'),
-        ]);
+            $verlofaanvraag = Verlofaanvraag::create([
+                'user_id' => Auth::id(),
+                'datum' => $request->input('datum'),
+                'eind_datum' => $request->input('eind_datum'), // Sla de eind_datum op
+                'reden' => $request->input('reden'),
+            ]);
 
-        return redirect()->route('verlofaanvragen.index');
+            return response()->json(['message' => 'Verlofaanvraag succesvol toegevoegd', 'verlofaanvraag' => $verlofaanvraag], 201);
+        } catch (\Exception $e) {
+            Log::error('Error adding verlofaanvraag: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to add verlofaanvraag', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $verlofaanvraag = Verlofaanvraag::findOrFail($id);
-        $verlofaanvraag->delete();
+        try {
+            $verlofaanvraag = Verlofaanvraag::findOrFail($id);
+            $verlofaanvraag->delete();
 
-        return redirect()->route('verlofaanvragen.index')->with('success', 'Verlofaanvraag succesvol verwijderd');
+            return response()->json(['message' => 'Verlofaanvraag succesvol verwijderd'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error deleting verlofaanvraag: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete verlofaanvraag', 'message' => $e->getMessage()], 500);
+        }
     }
-
 
     public function approve($id)
     {
-        $verlofaanvraag = Verlofaanvraag::findOrFail($id);
-        $verlofaanvraag->update(['status' => 'Goedgekeurd']);
+        try {
+            $verlofaanvraag = Verlofaanvraag::findOrFail($id);
+            $verlofaanvraag->update(['status' => 'Goedgekeurd']);
 
-        $datum = Carbon::createFromFormat('Y-m-d', $verlofaanvraag->datum);
+            $datum = Carbon::createFromFormat('Y-m-d', $verlofaanvraag->datum);
 
-        Notification::create([
-            'user_id' => $verlofaanvraag->user_id,
-            'title' => 'Verlof',
-            'message' => 'Jouw verlofaanvraag voor <strong>' . $datum->format('d-m-Y') . '</strong> is goedgekeurd.',
-            'is_read' => 0,
-        ]);
+            Notification::create([
+                'user_id' => $verlofaanvraag->user_id,
+                'title' => 'Verlof',
+                'message' => 'Jouw verlofaanvraag voor <strong>' . $datum->format('d-m-Y') . '</strong> is goedgekeurd.',
+                'is_read' => 0,
+            ]);
 
-        return redirect()->route('verlofaanvragen.index')->with('success', 'Verlofaanvraag is goedgekeurd.');
+            return response()->json(['message' => 'Verlofaanvraag is goedgekeurd'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error approving verlofaanvraag: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to approve verlofaanvraag', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function reject($id)
     {
-        $verlofaanvraag = Verlofaanvraag::findOrFail($id);
-        $verlofaanvraag->update(['status' => 'Afgekeurd']);
+        try {
+            $verlofaanvraag = Verlofaanvraag::findOrFail($id);
+            $verlofaanvraag->update(['status' => 'Afgekeurd']);
 
-        $datum = Carbon::createFromFormat('Y-m-d', $verlofaanvraag->datum);
+            $datum = Carbon::createFromFormat('Y-m-d', $verlofaanvraag->datum);
 
-        Notification::create([
-            'user_id' => $verlofaanvraag->user_id,
-            'title' => 'Verlof',
-            'message' => 'Jouw verlofaanvraag voor <strong>' . $datum->format('d-m-Y') . '</strong> is afgekeurd.',
-            'is_read' => 0,
-        ]);
+            Notification::create([
+                'user_id' => $verlofaanvraag->user_id,
+                'title' => 'Verlof',
+                'message' => 'Jouw verlofaanvraag voor <strong>' . $datum->format('d-m-Y') . '</strong> is afgekeurd.',
+                'is_read' => 0,
+            ]);
 
-        return redirect()->route('verlofaanvragen.index')->with('error', 'Verlofaanvraag is afgekeurd.');
+            return response()->json(['message' => 'Verlofaanvraag is afgekeurd'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error rejecting verlofaanvraag: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to reject verlofaanvraag', 'message' => $e->getMessage()], 500);
+        }
     }
 }
