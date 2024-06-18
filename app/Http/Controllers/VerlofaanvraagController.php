@@ -63,10 +63,10 @@ class VerlofaanvraagController extends Controller
 
             Log::info('Verlofaanvraag succesvol toegevoegd', ['verlofaanvraag' => $verlofaanvraag]);
 
-            return response()->json(['message' => 'Verlofaanvraag succesvol toegevoegd', 'verlofaanvraag' => $verlofaanvraag], 201);
+            return redirect()->route('verlof.index')->with('success', 'Verlofaanvraag succesvol toegevoegd');
         } catch (\Exception $e) {
             Log::error('Error adding verlofaanvraag: ' . $e->getMessage(), ['exception' => $e]);
-            return response()->json(['error' => 'Failed to add verlofaanvraag', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Failed to add verlofaanvraag');
         }
     }
 
@@ -76,10 +76,10 @@ class VerlofaanvraagController extends Controller
             $verlofaanvraag = Verlofaanvraag::findOrFail($id);
             $verlofaanvraag->delete();
 
-            return response()->json(['message' => 'Verlofaanvraag succesvol verwijderd'], 200);
+            return redirect()->route('verlof.index')->with('success', 'Verlofaanvraag succesvol verwijderd');
         } catch (\Exception $e) {
             Log::error('Error deleting verlofaanvraag: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to delete verlofaanvraag', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Failed to delete verlofaanvraag');
         }
     }
 
@@ -98,10 +98,10 @@ class VerlofaanvraagController extends Controller
                 'is_read' => 0,
             ]);
 
-            return response()->json(['message' => 'Verlofaanvraag is goedgekeurd'], 200);
+            return redirect()->route('verlof.index')->with('success', 'Verlofaanvraag is goedgekeurd');
         } catch (\Exception $e) {
             Log::error('Error approving verlofaanvraag: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to approve verlofaanvraag', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Failed to approve verlofaanvraag');
         }
     }
 
@@ -120,10 +120,10 @@ class VerlofaanvraagController extends Controller
                 'is_read' => 0,
             ]);
 
-            return response()->json(['message' => 'Verlofaanvraag is afgekeurd'], 200);
+            return redirect()->route('verlof.index')->with('success', 'Verlofaanvraag is afgekeurd');
         } catch (\Exception $e) {
             Log::error('Error rejecting verlofaanvraag: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to reject verlofaanvraag', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Failed to reject verlofaanvraag');
         }
     }
 }
