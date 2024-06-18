@@ -34,11 +34,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/roosters', [RoosterController::class, 'storeRooster']);
 
     Route::get('/verlofaanvragen', [VerlofaanvraagController::class, 'indexApi']);
-    Route::post('/verlofaanvragen', [VerlofaanvraagController::class, 'store']);
+    Route::post('/verlofaanvragen', [VerlofaanvraagController::class, 'storeApi']);
     Route::put('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'update']);
-    Route::delete('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'destroy']);
-    Route::post('/verlofaanvragen/{id}/approve', [VerlofaanvraagController::class, 'approve']);
-    Route::post('/verlofaanvragen/{id}/reject', [VerlofaanvraagController::class, 'reject']);
+    Route::delete('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'destroyApi']);
+    Route::post('/verlofaanvragen/{id}/approve', [VerlofaanvraagController::class, 'approveApi']);
+    Route::post('/verlofaanvragen/{id}/reject', [VerlofaanvraagController::class, 'rejectApi']);
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {

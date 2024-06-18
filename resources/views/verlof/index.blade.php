@@ -106,7 +106,7 @@
                                             </form>
                                         @endif
                                         <form action="{{ route('verlofaanvragen.delete', $verlofaanvraag->id) }}"
-                                            method="POST" style="display: inline;">
+                                            method="POST" style="display: inline;" onsubmit="return confirm('Weet je zeker dat je deze verlofaanvraag wilt verwijderen?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-icon btn-danger">
@@ -122,4 +122,12 @@
             </table>
         </div>
     </div>
+
+    <script>
+        function confirmDeletion(event) {
+            if (!confirm('Weet je zeker dat je deze verlofaanvraag wilt verwijderen?')) {
+                event.preventDefault();
+            }
+        }
+    </script>
 @endsection
