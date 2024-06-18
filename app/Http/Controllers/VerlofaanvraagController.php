@@ -46,6 +46,8 @@ class VerlofaanvraagController extends Controller
     public function store(Request $request)
     {
         try {
+            Log::info('Verlofaanvraag store request: ', $request->all());
+
             $request->validate([
                 'datum' => 'required|date',
                 'eind_datum' => 'nullable|date|after_or_equal:datum', // Zorg ervoor dat eind_datum na datum is
@@ -59,12 +61,15 @@ class VerlofaanvraagController extends Controller
                 'reden' => $request->input('reden'),
             ]);
 
+            Log::info('Verlofaanvraag succesvol toegevoegd', ['verlofaanvraag' => $verlofaanvraag]);
+
             return response()->json(['message' => 'Verlofaanvraag succesvol toegevoegd', 'verlofaanvraag' => $verlofaanvraag], 201);
         } catch (\Exception $e) {
-            Log::error('Error adding verlofaanvraag: ' . $e->getMessage());
+            Log::error('Error adding verlofaanvraag: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json(['error' => 'Failed to add verlofaanvraag', 'message' => $e->getMessage()], 500);
         }
     }
+
 
     public function destroy($id)
     {
