@@ -50,14 +50,14 @@ class VerlofaanvraagController extends Controller
 
             $request->validate([
                 'datum' => 'required|date',
-                'eind_datum' => 'nullable|date|after_or_equal:datum', // Zorg ervoor dat eind_datum na datum is
+                'eind_datum' => 'nullable|date|after_or_equal:datum',
                 'reden' => 'nullable',
             ]);
 
             $verlofaanvraag = Verlofaanvraag::create([
                 'user_id' => Auth::id(),
                 'datum' => $request->input('datum'),
-                'eind_datum' => $request->input('eind_datum'), // Sla de eind_datum op
+                'eind_datum' => $request->input('eind_datum'),
                 'reden' => $request->input('reden'),
             ]);
 
@@ -69,7 +69,6 @@ class VerlofaanvraagController extends Controller
             return response()->json(['error' => 'Failed to add verlofaanvraag', 'message' => $e->getMessage()], 500);
         }
     }
-
 
     public function destroy($id)
     {
