@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Models\User; // Zorg ervoor dat je het User-model importeert
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -25,11 +25,9 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unexpected user type'], 500);
         }
 
-        $refreshToken = Str::random(60); // Genereer een random string als refresh token
-
-        // Sla de refresh token op in de database
+        $refreshToken = Str::random(60);
         $user->refresh_token = $refreshToken;
-        $user->refresh_token_expiry = Carbon::now()->addDays(30); // Stel de vervaldatum in
+        $user->refresh_token_expiry = Carbon::now()->addDays(30);
         $user->save();
 
         return $this->respondWithToken($token, $refreshToken);
@@ -57,9 +55,12 @@ class AuthController extends Controller
             return response()->json(['error' => 'Invalid refresh token'], 401);
         }
 
-        // Maak een nieuw access token
-        $token = JWTAuth::fromUser($user);
+        $newToken = JWTAuth::fromUser($user);
+        $newRefreshToken = Str::random(60);
+        $user->refresh_token = $newRefreshToken;
+        $user->refresh_token_expiry = Carbon::now()->addDays(30);
+        $user->save();
 
-        return $this->respondWithToken($token, $refreshToken);
+        return $this->respondWithToken($newToken, $newRefreshToken);
     }
 }
