@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -46,12 +47,14 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
         $refreshToken = $request->input('refresh_token');
+        Log::info('Received refresh token: ' . $refreshToken);
 
         $user = User::where('refresh_token', $refreshToken)
             ->where('refresh_token_expiry', '>', Carbon::now())
             ->first();
 
         if (!$user) {
+            Log::error('Invalid refresh token or token expired');
             return response()->json(['error' => 'Invalid refresh token'], 401);
         }
 
@@ -60,6 +63,8 @@ class AuthController extends Controller
         $user->refresh_token = $newRefreshToken;
         $user->refresh_token_expiry = Carbon::now()->addDays(30);
         $user->save();
+
+        Log::info('Generated new tokens for user ID: ' . $user->id);
 
         return $this->respondWithToken($newToken, $newRefreshToken);
     }
