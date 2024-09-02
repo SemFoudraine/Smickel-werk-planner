@@ -23,6 +23,7 @@ use App\Http\Controllers\VerlofaanvraagController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('refresh', [AuthController::class, 'refresh']);
 
+Route::middleware('auth:api')->group(function () {
     Route::get('/roosterdata', [RoosterController::class, 'getRoosterData']);
     Route::get('/userdata', [UserController::class, 'getUser']);
     Route::get('/user/hours', [DashboardController::class, 'getUserHours']);
@@ -37,6 +38,7 @@ Route::post('refresh', [AuthController::class, 'refresh']);
     Route::delete('/verlofaanvragen/{id}', [VerlofaanvraagController::class, 'destroyApi']);
     Route::post('/verlofaanvragen/{id}/approve', [VerlofaanvraagController::class, 'approveApi']);
     Route::post('/verlofaanvragen/{id}/reject', [VerlofaanvraagController::class, 'rejectApi']);
+});
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::delete('/remove-from-rooster/{roosterId}', [UserController::class, 'removeFromRooster'])->name('removeFromRooster');
